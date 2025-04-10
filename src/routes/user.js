@@ -3,7 +3,7 @@ const userController=require('../controllers/user/userAuthController')
 const userRoute= express.Router()
 
 
-
+// User Routes
 
 userRoute.get("/",userController.home)
 
