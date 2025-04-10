@@ -1,0 +1,236 @@
+<%- include("../../views/partials/admin/header") %>
+<head>
+   <style>
+       body {
+           background-color: #f8f9fa;
+           font-family: 'Arial', sans-serif;
+       }
+       .container {
+           max-width: 1200px;
+           margin: auto;
+           padding: 30px;
+       }
+       .card {
+           border-radius: 8px;
+           box-shadow: 0 0 15px rgba(0,0,0,0.1);
+           background-color: #fff;
+           margin-bottom: 30px;
+       }
+       .card-header {
+           background-color: #007bff;
+           color: white;
+           padding: 15px;
+           border-top-left-radius: 8px;
+           border-top-right-radius: 8px;
+       }
+       .card-body {
+           padding: 20px;
+       }
+       .form-label {
+           font-weight: bold;
+           color: #333;
+       }
+       .form-control {
+           border-radius: 8px;
+           padding: 10px;
+           border: 1px solid #ddd;
+           width: 100%;
+       }
+       .form-control:focus {
+           border-color: #007bff;
+           box-shadow: 0 0 0 0.2rem rgba(38, 143, 255, 0.25);
+       }
+       .form-select {
+           border-radius: 8px;
+           padding: 10px;
+           width: 100%;
+       }
+       .btn-primary {
+           background-color: #007bff;
+           color: white;
+           border: none;
+           border-radius: 8px;
+           padding: 10px 20px;
+           font-size: 16px;
+           cursor: pointer;
+           transition: background-color 0.3s;
+       }
+       .btn-primary:hover {
+           background-color: #0056b3;
+       }
+       .error-message {
+           color: red;
+           display: none;
+           font-size: 14px;
+       }
+       .image-preview {
+           display: flex;
+           gap: 15px;
+           flex-wrap: wrap;
+           margin-bottom: 20px;
+       }
+       .image-preview img {
+           width: 100px;
+           height: 100px;
+           object-fit: cover;
+           border-radius: 8px;
+       }
+       .input-file-wrapper {
+           position: relative;
+           width: 100%;
+           height: 120px;
+           border: 2px dashed #007bff;
+           border-radius: 8px;
+           padding: 10px;
+           display: flex;
+           justify-content: center;
+           align-items: center;
+           cursor: pointer;
+           transition: border-color 0.3s;
+       }
+       .input-file-wrapper:hover {
+           border-color: #0056b3;
+       }
+       .input-file-wrapper input[type="file"] {
+           position: absolute;
+           top: 0;
+           left: 0;
+           width: 100%;
+           height: 100%;
+           opacity: 0;
+           cursor: pointer;
+       }
+   </style>
+</head>
+
+<section class="content-main">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h4>Edit Product</h4>
+                    </div>
+                    <div class="card-body">
+                        <form id="productForm" method="POST" action="/admin/update-product/<%= product._id %>" enctype="multipart/form-data">
+
+                            <!-- Product Name -->
+                            <div class="mb-4">
+                                <label for="product_name" class="form-label">Product Name</label>
+                                <input type="text" name="productName" class="form-control" id="product_name" value="<%= product.name %>">
+                                <span class="error-message" id="nameError">Product name is required.</span>
+                            </div>
+
+                            <!-- Brand -->
+                            <div class="mb-4">
+                                <label class="form-label">Brand</label>
+                                <select class="form-select" name="brand">
+                                    <option value="">Select Brand</option> 
+                                    <% brands.forEach(function(brand) { %>
+                                        <option value="<%= brand.id %>" <%= product.brand === brand.id ? 'selected' : '' %>><%= brand.name %></option>
+                                    <% }) %>
+                                </select>
+                            </div>
+
+                            <!-- Pricing & Quantity -->
+                            <div class="mb-4">
+                                <label class="form-label">Sale Price</label>
+                                <input name="salePrice" type="text" class="form-control" id="salePrice" value="<%= product.salePrice %>">
+                                <span class="error-message" id="priceError">Enter a valid price.</span>
+                            </div>
+                            <div class="mb-4">
+                                <label class="form-label">Quantity</label>
+                                <input name="quantity" type="text" class="form-control" id="quantity" value="<%= product.quantity %>">
+                                <span class="error-message" id="quantityError">Enter a valid quantity.</span>
+                            </div>
+
+                            <!-- Image Upload -->
+                            <div class="card mb-2">
+                                <div class="card-header">
+                                    <h4>Choose Images</h4>
+                                </div>
+                                <div class="card-body">
+                                    <div class="image-preview" id="imagePreviewContainer">
+                                        <% if (product.images && product.images.length > 0) { %>
+                                            <% product.images.forEach(function(image) { %>
+                                                <img src="/uploads/<%= image %>" alt="Product Image">
+                                            <% }) %>
+                                        <% } %>
+                                    </div>
+                                    <div class="input-file-wrapper">
+                                        <input type="file" name="productImage" id="imageUpload" accept="image/png, image/jpeg" multiple>
+                                        <span>Click to upload new images</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Update Button -->
+                            <button class="btn btn-primary" type="submit">Update</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    document.getElementById("productForm").addEventListener("submit", function (event) {
+        let valid = true;
+
+        // Input Fields
+        const name = document.getElementById("product_name");
+        const price = document.getElementById("salePrice");
+        const quantity = document.getElementById("quantity");
+
+        // Error Messages
+        const nameError = document.getElementById("nameError");
+        const priceError = document.getElementById("priceError");
+        const quantityError = document.getElementById("quantityError");
+
+        // Reset Errors
+        nameError.style.display = "none";
+        priceError.style.display = "none";
+        quantityError.style.display = "none";
+
+        // Name Validation
+        if (!name.value.trim()) {
+            nameError.style.display = "block";
+            valid = false;
+        }
+
+        // Price Validation
+        if (!price.value.trim() || isNaN(price.value) || parseFloat(price.value) <= 0) {
+            priceError.style.display = "block";
+            valid = false;
+        }
+
+        // Quantity Validation
+        if (!quantity.value.trim() || isNaN(quantity.value) || parseInt(quantity.value) <= 0) {
+            quantityError.style.display = "block";
+            valid = false;
+        }
+
+        if (!valid) event.preventDefault();
+    });
+
+    document.getElementById("imageUpload").addEventListener("change", function (event) {
+        const previewContainer = document.getElementById("imagePreviewContainer");
+        previewContainer.innerHTML = "";
+
+        Array.from(event.target.files).forEach((file) => {
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgElement = document.createElement("img");
+                imgElement.src = e.target.result;
+                imgElement.style.width = "100px";
+                imgElement.style.height = "100px";
+                imgElement.style.borderRadius = "8px";
+                previewContainer.appendChild(imgElement);
+            };
+            reader.readAsDataURL(file);
+        });
+    });
+</script>
+
+<%- include("../../views/partials/admin/footer") %>

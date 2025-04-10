@@ -1,0 +1,378 @@
+<%- include("../../views/partials/admin/header") %>
+
+<!-- Include SweetAlert2 -->
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+
+
+<style>
+    :root {
+        --primary-color: #4361ee;
+        --secondary-color: #3f37c9;
+        --success-color: #4cc9f0;
+        --danger-color: #f72585;
+        --warning-color: #ff9e00;
+        --light-gray: #f8f9fa;
+        --border-radius: 10px;
+    }
+
+    .content-main {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+
+    .content-header {
+        margin-bottom: 2rem;
+        padding: 1rem 0;
+    }
+
+    .content-title {
+        font-size: 1.75rem;
+        font-weight: 700;
+        color: #2d3748;
+        margin: 0;
+        position: relative;
+        display: inline-block;
+    }
+
+    .content-title::after {
+        content: '';
+        position: absolute;
+        bottom: -8px;
+        left: 0;
+        width: 60px;
+        height: 4px;
+        background: var(--primary-color);
+        border-radius: 2px;
+    }
+
+    .card {
+        background: white;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+        margin-bottom: 2rem;
+    }
+
+    .form-section {
+        background: white;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
+
+    .form-control {
+        border: 2px solid #e2e8f0;
+        border-radius: 8px;
+        padding: 0.75rem 1rem;
+        transition: all 0.3s ease;
+        font-size: 0.95rem;
+    }
+
+    .form-control:focus {
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.1);
+        outline: none;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #4a5568;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+
+    .btn {
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .btn-primary {
+        background: var(--primary-color);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        background: var(--secondary-color);
+        transform: translateY(-1px);
+    }
+
+    .table-container {
+        background: white;
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.07);
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        margin-bottom: 1rem;
+    }
+
+    .table th {
+        background: #2d3748;
+        color: white;
+        padding: 1rem;
+        font-weight: 600;
+        text-align: left;
+    }
+
+    .badge {
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 0.85rem;
+    }
+
+    .badge-success {
+        background: rgba(76, 201, 240, 0.1);
+        color: var(--success-color);
+    }
+
+    .badge-danger {
+        background: rgba(247, 37, 133, 0.1);
+        color: var(--danger-color);
+    }
+
+    .img-thumbnail {
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+    }
+
+    .img-thumbnail:hover {
+        transform: scale(1.05);
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .fade-in {
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .btn-sm {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+
+    .btn-warning {
+        background: var(--warning-color);
+        color: white;
+    }
+
+    .btn-danger {
+        background: var(--danger-color);
+        color: white;
+    }
+
+    .btn-success {
+        background: var(--success-color);
+        color: white;
+    }
+</style>
+<section class="content-main">
+  <div class="content-header">
+    <h2 class="content-title card-title">Brands</h2>
+  </div>
+  
+  <div class="card shadow-sm p-4">
+    <div class="card-body">
+      <div class="row">
+        
+        <!-- Brand Add Form -->
+        <div class="col-md-4 mb-4 mb-md-0">
+          <div class="p-4 border rounded bg-light shadow-sm">
+            <h5 class="text-center mb-4">Add Brand</h5>
+            <form method="post" action="/admin/brands/add" enctype="multipart/form-data">
+              <div class="mb-3">
+                <label class="form-label fw-bold">Brand Name</label>
+                <input type="text" name="name" placeholder="Enter brand name" class="form-control" required />
+              </div>
+              <div class="mb-3">
+                <label class="form-label fw-bold">Brand Image</label>
+                <input class="form-control border" name="brandImage" type="file" required />
+              </div>
+              <div class="d-grid">
+                <button class="btn btn-primary btn-lg fw-bold" type="submit">Add Brand</button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Brand Table -->
+        <div class="col-md-8">
+          <div class="table-responsive shadow-lg p-3 bg-white rounded">
+            <table class="table table-bordered table-hover text-center align-middle">
+              <thead class="table-dark">
+                <tr>
+                  <th class="p-3">Brand</th>
+                  <th class="p-3">Logo</th>
+                  <th class="p-3">Status</th>
+                  <th class="p-3">Actions</th>
+                  <th class="p-3">Delete</th>
+                </tr>
+              </thead>
+              <tbody>
+                <% brands.forEach(brand => { %>
+                <tr>
+                  <td class="fw-bold"><%= brand.name %></td>
+                  <td>
+                    <img src="<%= brand.image %>" alt="<%= brand.name %>" 
+                         class="img-thumbnail shadow-sm" 
+                         style="width: 60px; height: 60px; border-radius: 10px;" />
+                  </td>
+                  <td>
+                    <% if (brand.status === 'Blocked') { %>
+                      <span class="badge rounded-pill bg-danger px-3 py-2">Blocked</span>
+                    <% } else { %>
+                      <span class="badge rounded-pill bg-success px-3 py-2">Active</span>
+                    <% } %>
+                  </td>
+                  <td>
+                    <a href="/admin/brands/toggle-status/<%= brand._id %>" 
+                      class="btn btn-sm <%= brand.status === 'Blocked' ? 'btn-success' : 'btn-warning' %> fw-bold px-3">
+                      <%= brand.status === 'Blocked' ? 'Unblock' : 'Block' %>
+                    </a>
+                  </td>
+                  <td>
+                    <button class="btn btn-danger btn-sm fw-bold delete-btn px-3" 
+                            data-id="<%= brand._id %>">
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+                <% }); %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+  // Add Brand
+  document.querySelector("form").addEventListener("submit", async function (e) {
+    e.preventDefault();
+    const formData = new FormData(this);
+
+    try {
+      const response = await fetch("/admin/brands/add", {
+        method: "POST",
+        body: formData,
+      });
+      const data = await response.json();
+
+      if (data.success) {
+        Swal.fire({
+          icon: "success",
+          title: data.message,
+          showConfirmButton: false,
+          timer: 2000
+        }).then(() => location.reload());
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: data.message,
+        });
+      }
+    } catch (error) {
+      Swal.fire({
+        icon: "error",
+        title: "Something went wrong!",
+      });
+    }
+  });
+
+  // Toggle Brand Status
+  document.querySelectorAll(".toggle-status-btn").forEach(button => {
+    button.addEventListener("click", async function () {
+      const brandId = this.getAttribute("data-id");
+
+      try {
+        const response = await fetch(`/admin/brands/toggle-status/${brandId}`, {
+          method: "GET",
+        });
+        const data = await response.json();
+
+        if (data.success) {
+          Swal.fire({
+            icon: "success",
+            title: data.message,
+            showConfirmButton: false,
+            timer: 2000
+          }).then(() => location.reload());
+        } else {
+          Swal.fire({
+            icon: "error",
+            title: data.message,
+          });
+        }
+      } catch (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Something went wrong!",
+        });
+      }
+    });
+  });
+
+  // Delete Brand Confirmation
+  document.querySelectorAll(".delete-btn").forEach(button => {
+    button.addEventListener("click", function () {
+        const brandId = this.getAttribute("data-id");
+
+        Swal.fire({
+            title: "Are you sure?",
+            text: "This action cannot be undone!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Yes, delete it!"
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const response = await fetch(`/admin/brands/delete/${brandId}`, {
+                        method: "DELETE",
+                    });
+
+                    const data = await response.json();
+
+                    if (data.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: data.message,
+                            showConfirmButton: false,
+                            timer: 2000
+                        }).then(() => location.reload());
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: data.message,
+                        });
+                    }
+                } catch (error) {
+                    Swal.fire({
+                        icon: "error",
+                        title: "Something went wrong!",
+                    });
+                }
+            }
+        });
+    });
+});
+</script>
+
+<%- include("../../views/partials/admin/footer") %>
