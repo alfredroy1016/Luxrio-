@@ -7,11 +7,14 @@ const userRoute= express.Router()
 
 userRoute.get("/",userController.home)
 
-userRoute.get("/login",userController.login)
-
 userRoute.get("/signup",userController.loadsignup)
+userRoute.post("/signup", userController.signup);
 
-userRoute.get("Otp",userController.verifyOtp)
+userRoute.get("/verify-otp", userController.loadVerifyOtp);
+userRoute.post("/verify-otp",userController.verifyOtp);
+
+userRoute.get("/login", userController.loadLogin);
+userRoute.post("/login",userController. login);
 
 
 

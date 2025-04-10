@@ -24,7 +24,7 @@
                     <img src="/public/userassets/img/logo.png" alt="Luxrio Logo">
                 </div>
                 <h1>Create Account</h1>
-                <form >
+                <form id="signup-form">
                     <div class="form-group">
                         <label class="form-label" for="fullname">Full Name</label>
                         <input type="text" class="form-control" id="fullname">
@@ -64,80 +64,75 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.querySelector("form").addEventListener("submit", function (e) {
-    e.preventDefault();
-
-    const fullName = document.getElementById("fullname").value.trim();
-    const email = document.getElementById("email").value.trim();
-    const phone = document.getElementById("phone").value.trim();
-    const password = document.getElementById("password").value;
-    const confirmPassword = document.getElementById("confirm-password").value;
-
-    if (!fullName || !email || !phone || !password || !confirmPassword) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'All fields are required!',
-            confirmButtonColor: '#000'
+    <script>
+        document.getElementById("signup-form").addEventListener("submit", async function (e) {
+            e.preventDefault();
+        
+            const fullName = document.getElementById("fullname").value.trim();
+            const email = document.getElementById("email").value.trim();
+            const phone = document.getElementById("phone").value.trim();
+            const password = document.getElementById("password").value;
+            const confirmPassword = document.getElementById("confirm-password").value;
+        
+            if (!fullName || !email || !phone || !password || !confirmPassword) {
+                return Swal.fire({ icon: 'warning', title: 'All fields are required!' });
+            }
+        
+            const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+            if (!emailPattern.test(email)) {
+                return Swal.fire({ icon: 'error', title: 'Invalid Email' });
+            }
+        
+            if (password.length < 6) {
+                return Swal.fire({ icon: 'error', title: 'Weak Password' });
+            }
+        
+            if (password !== confirmPassword) {
+                return Swal.fire({ icon: 'error', title: 'Passwords Do Not Match' });
+            }
+        
+            const phonePattern = /^[0-9]{10}$/;
+            if (!phonePattern.test(phone)) {
+                return Swal.fire({ icon: 'error', title: 'Invalid Phone Number' });
+            }
+        
+            try {
+                const response = await fetch("/signup", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({
+                        name: fullName,
+                        email,
+                        phone,
+                        password,
+                        confirmPassword
+                    }),
+                });
+        
+                const result = await response.json();
+        
+                if (response.status === 200) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'OTP Sent!',
+                        text: `We’ve sent an OTP to ${email}`,
+                    }).then(() => {
+                        window.location.href = "/verify-otp";
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Signup Failed',
+                        text: result.errors ? result.errors[0].msg : 'Please try again.',
+                    });
+                }
+            } catch (err) {
+                console.error(err);
+                Swal.fire({ icon: 'error', title: 'Something went wrong!' });
+            }
         });
-        return;
-    }
-
-    const emailPattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
-    if (!emailPattern.test(email)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Invalid Email',
-            text: 'Please enter a valid email address.',
-            confirmButtonColor: '#000'
-        });
-        return;
-    }
-
-    if (password.length < 6) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Weak Password',
-            text: 'Password must be at least 6 characters long.',
-            confirmButtonColor: '#000'
-        });
-        return;
-    }
-
-    if (password !== confirmPassword) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Passwords Do Not Match',
-            text: 'Please make sure both passwords match.',
-            confirmButtonColor: '#000'
-        });
-        return;
-    }
-
-    const phonePattern = /^[0-9]{10}$/;
-    if (!phonePattern.test(phone)) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Invalid Phone Number',
-            text: 'Phone number must be 10 digits.',
-            confirmButtonColor: '#000'
-        });
-        return;
-    }
-
-    // Everything validated
-    Swal.fire({
-        icon: 'success',
-        title: 'Registration Successful!',
-        text: 'Your account has been created.',
-        confirmButtonColor: '#000'
-    }).then(() => {
-        // Submit form or use fetch to backend
-        e.target.submit(); // you can replace this with fetch call if needed
-    });
-});
-</script>
-      
+        </script>
+        
 
 </body>
 
