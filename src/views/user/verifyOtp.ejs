@@ -190,7 +190,7 @@
         // Resend OTP functionality
         resendBtn.addEventListener('click', async () => {
             try {
-                const response = await fetch('/resend-otp', {
+                const response = await fetch('/resendOtp', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

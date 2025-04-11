@@ -1,356 +1,205 @@
-<%- include("../partials/user/header") %>
-<style>
- /* Main color scheme adjustments */
-.card-green {
-  background-color: #B8E2F2; /* Lighter blue to match the mockup */
-}
+<%- include('../partials/userHeader') %>
+<body>
+  <div class="sidebar">
+      <div class="logo">
+          <img src="/public/userassets/img/logo.png" alt="Metrocery Logo">
+      </div>
+      <ul class="sidebar-menu">
+          <li>
+              <a href="#">
+                  <i class="fas fa-th-large"></i>
+                  <span>Dashboard</span>
+              </a>
+          </li>
+          <li>
+              <a href="#">
+                  <i class="fas fa-shopping-bag"></i>
+                  <span>Orders</span>
+              </a>
+          </li>
+          <li class="has-submenu">
+              <a href="#">
+                  <i class="fas fa-store"></i>
+                  <span>E-commerce</span>
+              </a>
+          </li>
+          <li>
+              <a href="#">
+                  <i class="fas fa-exchange-alt"></i>
+                  <span>Transactions</span>
+              </a>
+          </li>
+          <li>
+              <a href="#">
+                  <i class="fas fa-chart-bar"></i>
+                  <span>Reports</span>
+              </a>
+          </li>
+          <li class="has-submenu">
+              <a href="#">
+                  <i class="fas fa-users"></i>
+                  <span>Vendor Management</span>
+              </a>
+          </li>
+          <li class="has-submenu">
+              <a href="#">
+                  <i class="fas fa-percent"></i>
+                  <span>Promotions</span>
+              </a>
+          </li>
+          <li class="has-submenu">
+              <a href="#">
+                  <i class="fas fa-bicycle"></i>
+                  <span>Riders Management</span>
+              </a>
+          </li>
+          <li>
+              <a href="#">
+                  <i class="fas fa-file-alt"></i>
+                  <span>Pages</span>
+              </a>
+          </li>
+          <li>
+              <a href="#">
+                  <i class="fas fa-envelope"></i>
+                  <span>Contact</span>
+              </a>
+          </li>
+          <li class="has-submenu">
+              <a href="#">
+                  <i class="fas fa-info-circle"></i>
+                  <span>About</span>
+              </a>
+          </li>
+          <li class="has-submenu">
+              <a href="#" class="active">
+                  <i class="fas fa-user"></i>
+                  <span>My Profile</span>
+              </a>
+              <ul class="submenu">
+                  <li>
+                      <a href="#">
+                          <span>My Profile</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#">
+                          <span>My Balance</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#">
+                          <span>My Bank</span>
+                      </a>
+                  </li>
+                  <li>
+                      <a href="#">
+                          <span>Change Password</span>
+                      </a>
+                  </li>
+              </ul>
+          </li>
+      </ul>
+  </div>
 
-.main {
-  padding: 30px 0;
-  background-color: #F4F0F3; /* Light background color from mockup */
-}
+  <!-- Main Content -->
+  <div class="main-content">
+      <!-- Top Bar -->
+      <!-- Page Content -->
+      <h3 class="page-title">My Profile</h3>
 
-/* Dashboard menu styling to match mockup */
-.dashboard-menu {
-  background-color: #D6EEF2; /* Lighter blue for menu background */
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
+      <!-- Profile Header -->
+      <div class="profile-header">
+          <div class="profile-avatar">
+              <img src="/api/placeholder/100/100" alt="Profile Avatar">
+              <div class="camera-icon">
+                  <i class="fas fa-camera"></i>
+              </div>
+          </div>
+          <div class="profile-info">
+              <h4 class="profile-name">Natashia Khaleira</h4>
+              <div class="profile-role">Admin</div>
+              <div class="profile-location">
+                  <i class="fas fa-map-marker-alt"></i> Leeds, United Kingdom
+              </div>
+          </div>
+      </div>
 
-.dashboard-menu .nav-link {
-  font-weight: bold;
-  color: #4A6A5A; /* Darker green color for menu items */
-  margin-bottom: 10px;
-  padding: 10px 15px;
-  border-radius: 6px;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-}
+      <!-- Personal Information Section -->
+      <div class="info-section">
+          <div class="section-header">
+              <h5 class="section-title">Personal Information</h5>
+              <button class="edit-btn">
+                  Edit <i class="fas fa-edit"></i>
+              </button>
+          </div>
+          <div class="info-row">
+              <div class="info-col">
+                  <div class="info-label">First Name</div>
+                  <div class="info-value">Natashia</div>
+              </div>
+              <div class="info-col">
+                  <div class="info-label">Last Name</div>
+                  <div class="info-value">Khaleira</div>
+              </div>
+              <div class="info-col">
+                  <div class="info-label">Date of Birth</div>
+                  <div class="info-value">12-10-1990</div>
+              </div>
+              <div class="info-col">
+                  <div class="info-label">Email Address</div>
+                  <div class="info-value">info@binary-fusion.com</div>
+              </div>
+              <div class="info-col">
+                  <div class="info-label">Phone Number</div>
+                  <div class="info-value">(+62) 821 2554-5846</div>
+              </div>
+              <div class="info-col">
+                  <div class="info-label">User Role</div>
+                  <div class="info-value">Admin</div>
+              </div>
+          </div>
+      </div>
 
-.dashboard-menu .nav-link:hover, 
-.dashboard-menu .nav-link.active {
-  color: #2E4E41;
-  background-color: #CCE8EC; /* Slightly darker than menu background */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
+      <!-- Address Section -->
+      <div class="info-section">
+          <div class="section-header">
+              <h5 class="section-title">Address</h5>
+              <button class="edit-btn">
+                  Edit <i class="fas fa-edit"></i>
+              </button>
+          </div>
+          <div class="info-row">
+              <div class="info-col">
+                  <div class="info-label">Country</div>
+                  <div class="info-value">United Kingdom</div>
+              </div>
+              <div class="info-col">
+                  <div class="info-label">City</div>
+                  <div class="info-value">Leeds, East London</div>
+              </div>
+              <div class="info-col">
+                  <div class="info-label">Postal Code</div>
+                  <div class="info-value">ERT 1254</div>
+              </div>
+          </div>
+      </div>
+  </div>
 
-/* Card styling to match mockup */
-.card {
-  border-radius: 10px;
-  border: none;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  margin-bottom: 20px;
-  overflow: hidden;
-}
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+  <script>
+      // Toggle submenu on click
+      document.querySelectorAll('.has-submenu > a').forEach(item => {
+          item.addEventListener('click', event => {
+              event.preventDefault();
+              const parent = item.parentElement;
+              parent.classList.toggle('active');
+          });
+      });
+  </script>
+</body>
 
-.card-header {
-  background-color: #4A6E78; /* Teal-gray color from mockup */
-  color: white;
-  border-radius: 10px 10px 0 0 !important;
-  padding: 15px 20px;
-}
-
-/* User profile card specific styling */
-#dashboard .card-body {
-  background-color: #B8E2F2; /* Light blue background */
-  padding: 30px 20px;
-}
-
-/* Button styling */
-.btn-success, .btn-primary {
-  background-color: #4A6E78; /* Teal-gray from mockup */
-  border-color: #4A6E78;
-  border-radius: 5px;
-  padding: 8px 16px;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.btn-success:hover, .btn-primary:hover {
-  background-color: #38565E;
-  border-color: #38565E;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-}
-
-/* Breadcrumb styling */
-.page-header.breadcrumb-wrap {
-  background-color: #EEE2E9; /* Light pink/lavender from mockup */
-  padding: 15px 0;
-  margin-bottom: 20px;
-}
-
-.breadcrumb {
-  display: flex;
-  align-items: center;
-  font-family: 'Arial', sans-serif;
-  font-size: 16px;
-  color: #121311;
-}
-
-.breadcrumb a {
-  color: #007bff;
-  text-decoration: none;
-}
-
-/* Additional styles for layout improvements */
-.tab-content {
-  background-color: transparent;
-}
-
-/* Header styling */
-.text-center {
-  font-weight: 600;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-  .dashboard-menu {
-    margin-bottom: 20px;
-  }
-  
-  .card {
-    margin-bottom: 15px;
-  }
-}
-</style>
-
-
-<main class="main">
- <div class="page-header breadcrumb-wrap mb-3">
-   <div class="container">
-     <div class="breadcrumb">
-       <a href="#" rel="nofollow">Home</a>
-       <span></span> Profile <span></span> Account
-     </div>
-   </div>
- </div>
-  <section class="pt-10 pb-10">
-   <div class="container">
-     <div class="row">
-       <div class="col-lg-10 m-auto">
-         <div class="row">
-           <div class="col-md-4">
-             <div class="dashboard-menu">
-               <ul class="nav flex-column" role="tablist">
-                 <li class="nav-item">
-                   <a class="nav-link active" id="dashboard-tab" data-bs-toggle="tab" href="#dashboard" role="tab" aria-controls="dashboard" aria-selected="false">
-                     <i class="fi-rs-settings-sliders mr-10"></i>Dashboard
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a class="nav-link" id="address-tab" data-bs-toggle="tab" href="#address" role="tab" aria-controls="address" aria-selected="true">
-                     <i class="fi-rs-marker mr-10"></i>My Address
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a class="nav-link" id="orders-tab" data-bs-toggle="tab" href="#orders" role="tab" aria-controls="orders" aria-selected="false">
-                     <i class="fi-rs-shopping-bag mr-10"></i>Orders
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#track-orders" role="tab" aria-controls="track-orders" aria-selected="false">
-                     <i class="fi-rs-shopping-cart-check mr-10"></i>Wallet Status
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#wallet-history" role="tab" aria-controls="track-orders" aria-selected="false">
-                     <i class="fi-rs-shopping-cart-check mr-10"></i>Wallet History
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a class="nav-link" id="track-orders-tab" data-bs-toggle="tab" href="#referal" role="tab" aria-controls="track-orders" aria-selected="false">
-                     <i class="fi-rs-shopping-cart-check mr-10"></i>Referals
-                   </a>
-                 </li>
-                 <li class="nav-item">
-                   <a class="nav-link" href="/logout">
-                     <i class="fi-rs-sign-out mr-10"></i>Logout
-                   </a>
-                 </li>
-               </ul>
-             </div>
-           </div>
-           <div class="col-md-8">
-             <div class="tab-content dashboard-content">
-
-
-               <div class="tab-pane fade show active" id="dashboard" role="tabpanel" aria-labelledby="dashboard-tab">
-                 <div class="card card-green">
-                   <div class="card-header">
-                     <h5 class="mb-0 text-center">User Profile</h5>
-                   </div>
-                   <div class="card-body text-center">
-                     <h5 class="card-title"></h5>
-                     <p class="card-text">
-                        <strong>Phone:</strong> <%= user.phone ? user.phone : 'Not Provided' %>
-                      </p>
-                      <p class="card-text">
-                        <strong>Email:</strong> <%= user.email %>
-                      </p>
-                      
-                     <a href="" class="btn btn-sm btn-success">Change Password</a>
-                   </div>
-                 </div>
-               </div>
-
-
-               <div
-                 class="tab-pane fade"
-                 id="address"
-                 role="tabpanel"
-                 aria-labelledby="address-tab"
-               >
-                 <div class="row">
-                
-                   <div class="col-lg-6">
-                     <div class="card mb-3 mb-lg-0">
-                       <div class="card-header">
-                         <h5 class="mb-0"></h5>
-                       </div>
-
-
-                       <div class="card-body">
-                         <address>
-                        
-                        
-                         </address>
-                         <p></p>
-                      
-                         <div class="d-flex justify-content-between">
-                           <a href="#" class="btn-small">Edit</a>
-                           <a href="#" class="btn-small" onclick="">Delete</a>
-                         </div>
-                        
-                       </div>
-                     </div>
-                   </div>
-                
-                   <div class="col-lg-6">
-                     <div class="card mb-3 mb-lg-0">
-                       <div class="card-header">
-                         <h5 class="mb-0"></h5>
-                       </div>
-                       <div class="card-body">
-                         <address>No address</address>
-                       </div>
-                     </div>
-                   </div>
-              
-                   <div>
-                     <a href="#">
-                       <button class="btn btn-primary w-70">
-                         Add address
-                       </button>
-                     </a>
-                   </div>
-                 </div>
-               </div>
-
-
-               <div class="tab-pane fade" id="orders" role="tabpanel" aria-labelledby="orders-tab">
-                 <div class="card">
-                   <div class="card-header">
-                     <h5 class="mb-0">Your Orders</h5>
-                   </div>
-                   <div class="card-body">
-                     <div class="table-responsive">
-                       <table class="table">
-                         <thead>
-                           <tr>
-                             <th>Order</th>
-                             <th>Status</th>
-                             <th>Total</th>
-                             <th>Actions</th>
-                           </tr>
-                         </thead>
-                         <tbody>
-                           <tr>
-                             <td></td>
-                             <td></td>
-                             <td></td>
-                             <td>
-                               <a href="" class="btn-small d-block">View</a>
-                             </td>
-                           </tr>
-                         </tbody>
-                       </table>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-
-
-               <div class="tab-pane fade" id="track-orders" role="tabpanel" aria-labelledby="track-orders-tab">
-                 <div class="card">
-                   <div class="card-header">
-                     <h5 class="mb-0">Wallet</h5>
-                   </div>
-                   <div class="card-body contact-from-area">
-                     <div class="row">
-                       <div class="col-lg-8 mx-auto text-center mt-90">
-                         <form>
-                           <div class="form-group">
-                             <label for="walletAmount" class="h4">Amount</label>
-                             <div class="h3"></div>
-                           </div>
-                           <button type="button" class="btn btn-success" onclick="">Add Money</button>
-                         </form>
-                       </div>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-
-
-               <div class="tab-pane fade" id="wallet-history" role="tabpanel" aria-labelledby="orders-tab">
-                 <div class="card">
-                   <div class="card-header">
-                     <h5 class="mb-0">Wallet History</h5>
-                   </div>
-                   <div class="card-body">
-                     <div class="table-responsive">
-                       <table class="table">
-                         <thead>
-                           <tr>
-                             <th>Date</th>
-                             <th>Status</th>
-                             <th>Amount</th>
-                           </tr>
-                         </thead>
-                         <tbody>
-                           <tr>
-                             <td></td>
-                             <td></td>
-                             <td></td>
-                           </tr>
-                         </tbody>
-                       </table>
-                     </div>
-                   </div>
-                 </div>
-               </div>
-
-
-               <div class="tab-pane fade" id="referal" role="tabpanel" aria-labelledby="track-orders-tab">
-                 <div class="card">
-                   <div class="card-header">
-                     <h5 class="mb-0">Referal</h5>
-                   </div>
-                   <div class="card-body">
-                     <h6 class="mb-3">Refer your friends and earn money!</h6>
-                     <p>Share this link: <strong>></strong></p>
-                     <p>Earned: ₹</p>
-                   </div>
-                 </div>
-               </div>
-       </div>
-     </div>
-   </div>
- </section>
-</main>
-<%- include("../partials/user/footer") %>
-
+<%- include('../partials/userFooter') %>
 
 
 

@@ -2,13 +2,11 @@ const User = require("../../models/userSchema");
 const argon2 = require("argon2");
 const nodemailer = require("nodemailer");
 const env = require("dotenv").config();
-
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const flash = require("connect-flash");
 
 const OTP_EXPIRY_TIME = 10 * 60 * 1000; // 10 minutes
-const SALT_ROUNDS = 10;
 const OTP_LENGTH = 6;
 
 
@@ -18,7 +16,9 @@ const OTP_LENGTH = 6;
 const home = async (req,res) => {
     try {
        console.log("entering the function which renders the home page");
+       user: req.session.user, 
        res.render('user/home') 
+     
     } catch (error) {
         console.log("error occured while rendering the home page",error)
     }
@@ -154,7 +154,7 @@ function generateOtp() {
   
       await newUser.save();
       delete req.session.signupData;
-      req.session.signup = true;
+      req.session.signup = false;
       req.session.userId = newUser._id;
       req.session.email = newUser.email;
       req.session.isAuth = true;
@@ -177,7 +177,6 @@ function generateOtp() {
         return res.render("user/verifyOtp", {
           name,
           email,
-          // otp, ❌ REMOVE THIS if it's not defined or not needed
         });
       } else {
         return res.redirect("/signup");
@@ -232,6 +231,7 @@ const login = async (req, res) => {
     req.session.email = user.email;
     req.session.isAuth = true;
     req.session.signup = true;
+    req.session.name=user.name
 
     console.log("Session set:", req.session);
 
@@ -245,6 +245,114 @@ const login = async (req, res) => {
   }
 };
 
+passport.use(
+  new GoogleStrategy(
+    {
+      clientID: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      callbackURL: "http://localhost:3000/auth/google/callback",
+      passReqToCallback: true,
+    },
+    async function (req, accessToken, refreshToken, profile, done) {
+      try {
+        // Check if user already exists
+        let user = await User.findOne({ email: profile.emails[0].value });
+        console.log(user, "fb");
+        if (user) {
+          // If user exists, return user
+          return done(null, user);
+        } else {
+          // Create new user with Google profile data
+          const newUser = new User({
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            password: "google-auth-" + Math.random().toString(36).slice(-8), // Random password for Google users
+            isVerified: true, // Google users are already verified
+            googleId: profile.id,
+          });
+
+          await newUser.save();
+
+          return done(null, newUser);
+        }
+      } catch (error) {
+        return done(error, null);
+      }
+    }
+  )
+);
+
+passport.serializeUser((user, done) => {
+  done(null, user.id);
+});
+
+passport.deserializeUser(async (id, done) => {
+  try {
+    const user = await User.findById(id);
+    done(null, user);
+  } catch (error) {
+    done(error, null);
+  }
+});
+
+
+
+
+const resendOtp = async (req, res) => {
+  try {
+    console.log("HIT /resend-otp route");
+
+    const resetData = req.session.passwordReset;
+    console.log("Session data:", resetData);
+
+    if (!resetData || !resetData.email) {
+      return res.status(400).json({
+        success: false,
+        message: "Session expired. Please try again.",
+      });
+    }
+
+    const newOtp = generateOtp();
+    console.log("Generated OTP:", newOtp);
+
+    const emailSent = await sendVerificationEmail(resetData.email, newOtp);
+    console.log("Email sent status:", emailSent);
+
+    if (!emailSent) {
+      return res.status(500).json({
+        success: false,
+        message: "Failed to send verification email",
+      });
+    }
+
+    req.session.passwordReset.otp = newOtp;
+    req.session.passwordReset.otpExpiry = Date.now() + OTP_EXPIRY_TIME;
+
+    res.status(200).json({ success: true, message: "OTP resent successfully" });
+  } catch (error) {
+    console.error("Resend OTP error:", error);
+    res.status(500).json({ success: false, message: "Error resending OTP" });
+  }
+};
+
+const loadShopping = async (req, res) => {
+  try {
+    res.render("user/shop");
+  } catch (error) {
+    console.error("Error loading shopping page:", error);
+    res.status(500).render("error", { message: "Internal server error" });
+  }
+};
+
+const loadProfile=async(req,res)=>{
+  try {
+    res.render("user/profile")
+  } catch (error) {
+    
+  }
+}
+
+
 
 module.exports={
     home,
@@ -253,5 +361,8 @@ module.exports={
     loadVerifyOtp,
     verifyOtp,
     loadLogin,
-    login
+    login,
+    resendOtp,
+    loadShopping,
+    loadProfile
 }

@@ -7,13 +7,21 @@ const userRoute=require('./routes/user')
 const app=express()
 const argon2 = require("argon2");
 const flash = require("connect-flash");
-
+const passport = require('passport');
+require('./config/passport-setup');
 
 
 app.use(express.urlencoded({ extended: true })); // for form data
 app.use(express.json()); // for JSON data
 
 app.use(nocache())
+// const setUser = (req, res, next) => {
+//   res.locals.user = req.session.user || null;
+//   next();
+// };
+
+// app.use(setUser)
+
 
 app.use(session({
     secret: process.env.SESSION_SECRET,
@@ -21,7 +29,13 @@ app.use(session({
     saveUninitialized: true
   }));
 
+  app.use((req,res,next)=>{
+    res.locals.session=req.session
+    next();
+  })
 
+  app.use(passport.initialize());
+  app.use(passport.session());
 
   app.set('view engine',"ejs")
   app.set('views',path.join(__dirname,"views"))
